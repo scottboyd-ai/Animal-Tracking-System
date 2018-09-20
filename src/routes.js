@@ -21,9 +21,14 @@ let Routes = [
         method: 'GET',
         path: '/',
         handler: function (request, h) {
-            return __awaiter(this, void 0, void 0, function* () {
-                return h.view('index.html');
-            });
+            return h.view('index.html');
+        }
+    },
+    {
+        method: 'GET',
+        path: '/animals/new',
+        handler: function (request, h) {
+            return h.view('newanimal.html');
         }
     },
     {

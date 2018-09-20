@@ -11,8 +11,15 @@ let Routes = [
     {
         method: 'GET',
         path: '/',
-        handler: async function (request, h) {
+        handler: function (request, h) {
             return h.view('index.html');
+        }
+    },
+    {
+        method: 'GET',
+        path: '/animals/new',
+        handler: function (request, h) {
+            return h.view('newanimal.html');
         }
     },
     {
