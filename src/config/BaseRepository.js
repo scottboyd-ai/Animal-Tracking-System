@@ -42,6 +42,12 @@ class BaseRepository {
             return yield this._collection.findOne({ $eq: { _id: id } });
         });
     }
+    findAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this._collection.find({});
+            return result.toArray();
+        });
+    }
 }
 exports.BaseRepository = BaseRepository;
 //# sourceMappingURL=BaseRepository.js.map

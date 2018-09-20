@@ -32,4 +32,8 @@ export abstract class BaseRepository<T> implements IRead<T>, IWrite<T> {
     async findOne(id: string): Promise<T> {
         return await this._collection.findOne({$eq: {_id: id}});
     }
+    async findAll(): Promise<T[]> {
+        const result =  await this._collection.find({});
+        return result.toArray();
+    }
 }

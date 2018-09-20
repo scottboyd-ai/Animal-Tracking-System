@@ -13,9 +13,12 @@ const Sex_1 = require("./Enums/Sex");
 const AnimalLocation_1 = require("./models/AnimalLocation");
 const Enclosure_1 = require("./models/Enclosure");
 const MedicalRecord_1 = require("./models/MedicalRecord");
-const WeightUnit_1 = require("./Enums/WeightUnit");
 const FeedingInformation_1 = require("./models/FeedingInformation");
 const AnimalService_1 = require("./config/Animal/AnimalService");
+const EnclosureService = require("./config/Enclosure/EnclosureService");
+const htmlUtil = require("./util/htmlUtil");
+const AgeUnit_1 = require("./Enums/AgeUnit");
+const WeightUnit_1 = require("./Enums/WeightUnit");
 let Routes = [
     {
         method: 'GET',
@@ -28,7 +31,44 @@ let Routes = [
         method: 'GET',
         path: '/animals/new',
         handler: function (request, h) {
-            return h.view('newanimal.html');
+            return __awaiter(this, void 0, void 0, function* () {
+                const ageUnitOptions = htmlUtil.formatAgeUnitsAsSelectOptions();
+                const weightUnitOptions = htmlUtil.formatWeightUnitsAsSelectOptions();
+                const enclosures = yield EnclosureService.getAllEnclosures();
+                const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
+                const data = {
+                    ageUnitOptions: ageUnitOptions,
+                    weightUnitOptions: weightUnitOptions,
+                    enclosureOptions: enclosureOptions
+                };
+                return h.view('newanimal.html', data);
+            });
+        }
+    },
+    {
+        method: 'POST',
+        path: '/animals/new',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let animal = new Animal_1.Animal();
+                animal.name = request.payload.animalName;
+                animal.species = request.payload.species;
+                animal.age = request.payload.age;
+                animal.ageUnit = AgeUnit_1.getValue(request.payload.ageUnit);
+                animal.weight = request.payload.weight;
+                animal.weightUnit = WeightUnit_1.getValue(request.payload.weightUnit);
+                let enclosure = new Enclosure_1.Enclosure();
+                if (request.payload.newEnclosure) {
+                    enclosure.name = request.payload.enclosureName;
+                    enclosure.dimensions = request.payload.dimensions;
+                    enclosure.lastCleaned = new Date(request.payload.enclosureLastCleaned).getTime();
+                    enclosure.notes = request.payload.enclosureNotes;
+                }
+                else {
+                    enclosure = request.payload.enclosure;
+                }
+                return AnimalService_1.saveAnimal(animal);
+            });
         }
     },
     {

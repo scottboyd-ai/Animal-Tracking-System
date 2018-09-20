@@ -6,4 +6,8 @@ var WeightUnit;
     WeightUnit[WeightUnit["MILLIGRAMS"] = 1] = "MILLIGRAMS";
     WeightUnit[WeightUnit["KILOGRAMS"] = 2] = "KILOGRAMS";
 })(WeightUnit = exports.WeightUnit || (exports.WeightUnit = {}));
+function getValue(value) {
+    return WeightUnit[value.toUpperCase()];
+}
+exports.getValue = getValue;
 //# sourceMappingURL=WeightUnit.js.map

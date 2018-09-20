@@ -16,6 +16,10 @@ class Enclosure extends BaseModel_1.BaseModel {
 __decorate([
     typegoose_1.prop(),
     __metadata("design:type", String)
+], Enclosure.prototype, "name", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", String)
 ], Enclosure.prototype, "dimensions", void 0);
 __decorate([
     typegoose_1.prop(),

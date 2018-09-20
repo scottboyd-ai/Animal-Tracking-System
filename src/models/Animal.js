@@ -16,6 +16,8 @@ const Enclosure_1 = require("./Enclosure");
 const MedicalRecord_1 = require("./MedicalRecord");
 const FeedingInformation_1 = require("./FeedingInformation");
 const BaseModel_1 = require("./BaseModel");
+const AgeUnit_1 = require("../Enums/AgeUnit");
+const WeightUnit_1 = require("../Enums/WeightUnit");
 class Animal extends BaseModel_1.BaseModel {
 }
 __decorate([
@@ -35,6 +37,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Animal.prototype, "age", void 0);
 __decorate([
+    typegoose_1.prop({ enum: AgeUnit_1.AgeUnit }),
+    __metadata("design:type", Number)
+], Animal.prototype, "ageUnit", void 0);
+__decorate([
     typegoose_1.prop({ enum: Sex_1.Sex }),
     __metadata("design:type", Number)
 ], Animal.prototype, "sex", void 0);
@@ -42,6 +48,10 @@ __decorate([
     typegoose_1.prop(),
     __metadata("design:type", Number)
 ], Animal.prototype, "weight", void 0);
+__decorate([
+    typegoose_1.prop({ enum: WeightUnit_1.WeightUnit }),
+    __metadata("design:type", Number)
+], Animal.prototype, "weightUnit", void 0);
 __decorate([
     typegoose_1.prop({ ref: Enclosure_1.Enclosure }),
     __metadata("design:type", Object)

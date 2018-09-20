@@ -5,6 +5,116 @@
     <title>{{title}}</title>
 </head>
 <body>
+<form action="/animals/new" method="post">
+    <div>
+        <label>Animal Name:
+            <input type="text" name="animalName"/>
+        </label>
+    </div>
+    <div>
+        <label>Species:
+            <input type="text" name="species"/>
+        </label>
+    </div>
+    <div>
+        <label>Age:
+            <input type="number" name="age">
+            <select name="ageUnit">
+                {{{ageUnitOptions}}}
+            </select>
+        </label>
+    </div>
+    <div>
+        <label>Weight:
+            <input type="number" name="weight">
+            <select name="weightUnit">
+                {{{weightUnitOptions}}}
+            </select>
+        </label>
 
+    </div>
+    <div>
+        <label>Enclosure:
+            <select name="enclosure">
+                {{{enclosureOptions}}}
+            </select>
+        </label>
+        <input type="button" id="newEnclosureButton" onclick="newEnclosure()" value="Add New Enclosure">
+        <input type="hidden" name="newEnclosure">
+        <div id="newEnclosure">
+            <div>
+                <label>Enclosure Name:
+                    <input id="enclosureName" name="enclosureName">
+                </label>
+            </div>
+            <div>
+                <label>Enclosure Dimensions:
+                    <input id="dimensions" name="dimensions">
+                </label>
+            </div>
+            <div>
+                <label>Enclosure Last Cleaned:
+                    <input id="enclosureLastCleaned" name="enclosureLastCleaned" type="datetime-local">
+                </label>
+            </div>
+            <div>
+                <label>Notes on Enclosure:
+                    <input id="enclosureNotes" name="enclosureNotes">
+                </label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <label>Medical Records:
+            <input type="button" onclick="importMedicalRecords()" value="Import Medical Records">
+        </label>
+    </div>
+    <div>
+        <label>Feeding Instructions:
+            <input name="feedingInstructions">
+        </label>
+    </div>
+    <div>
+        <label>Feeding Notes:
+            <input name="feedingNotes">
+        </label>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
 </body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    let enclosureShow = false;
+    const newEnclosureElement = $('#newEnclosure');
+
+    $(function () {
+        newEnclosureElement.hide();
+    });
+
+    function newEnclosure(){
+        $('#newEnclosure').val(enclosureShow);
+        if(enclosureShow){
+            newEnclosureElement.hide();
+            clearEnclosureFields();
+            enclosureShow = false;
+        } else{
+            newEnclosureElement.show();
+            $('#newEnclosureButton').val('Nevermind');
+            enclosureShow = true;
+        }
+    }
+
+    function clearEnclosureFields(){
+        $('#enclosureName').val('');
+        $('#dimensions').val('');
+        $('#enclosureLastCleaned').val('');
+        $('#enclosureNotes').val('');
+    }
+
+    function importMedicalRecords(){
+        alert('Pay the devs more to get this feature!');
+    }
+</script>
 </html>

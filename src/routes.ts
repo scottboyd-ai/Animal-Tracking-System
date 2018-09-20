@@ -3,9 +3,14 @@ import {Sex} from "./Enums/Sex";
 import {AnimalLocation} from "./models/AnimalLocation";
 import {Enclosure} from "./models/Enclosure";
 import {MedicalRecord} from "./models/MedicalRecord";
-import {WeightUnit} from "./Enums/WeightUnit";
 import {FeedingInformation} from "./models/FeedingInformation";
 import {prepareAnimal, saveAnimal} from "./config/Animal/AnimalService";
+import * as EnclosureService from "./config/Enclosure/EnclosureService";
+import * as htmlUtil from "./util/htmlUtil";
+import {AgeUnit, getValue as getAgeValue} from "./Enums/AgeUnit";
+import {WeightUnit, getValue as getWeightValue} from "./Enums/WeightUnit";
+
+
 
 let Routes = [
     {
@@ -18,8 +23,41 @@ let Routes = [
     {
         method: 'GET',
         path: '/animals/new',
-        handler: function (request, h) {
-            return h.view('newanimal.html');
+        handler: async function (request, h) {
+            const ageUnitOptions = htmlUtil.formatAgeUnitsAsSelectOptions();
+            const weightUnitOptions = htmlUtil.formatWeightUnitsAsSelectOptions();
+            const enclosures = await EnclosureService.getAllEnclosures();
+            const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
+            const data = {
+                ageUnitOptions: ageUnitOptions,
+                weightUnitOptions: weightUnitOptions,
+                enclosureOptions: enclosureOptions
+            };
+            return h.view('newanimal.html', data);
+        }
+    },
+    {
+        method: 'POST',
+        path: '/animals/new',
+        handler: async function (request, h){
+            let animal = new Animal();
+            animal.name = request.payload.animalName;
+            animal.species = request.payload.species;
+            animal.age = request.payload.age;
+            animal.ageUnit = getAgeValue(request.payload.ageUnit);
+            animal.weight = request.payload.weight;
+            animal.weightUnit = getWeightValue(request.payload.weightUnit);
+            let enclosure = new Enclosure();
+            if (request.payload.newEnclosure) {
+                enclosure.name = request.payload.enclosureName;
+                enclosure.dimensions = request.payload.dimensions;
+                enclosure.lastCleaned = new Date(request.payload.enclosureLastCleaned).getTime();
+                enclosure.notes = request.payload.enclosureNotes;
+            } else {
+                enclosure = request.payload.enclosure;
+            }
+
+            return saveAnimal(animal);
         }
     },
     {
