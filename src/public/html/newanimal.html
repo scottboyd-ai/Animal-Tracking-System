@@ -6,92 +6,143 @@
 </head>
 <body>
 <form action="/animals/new" method="post">
-    <div>
-        <label>Animal Name:
-            <input type="text" name="animalName"/>
-        </label>
-    </div>
-    <div>
-        <label>Species:
-            <input type="text" name="species"/>
-        </label>
-    </div>
-    <div>
-        <label>Age:
-            <input type="number" name="age">
-            <select name="ageUnit">
-                {{{ageUnitOptions}}}
-            </select>
-        </label>
-    </div>
-    <div>
-        <label>Weight:
-            <input type="number" name="weight">
-            <select name="weightUnit">
-                {{{weightUnitOptions}}}
-            </select>
-        </label>
-    </div>
-    <div>
-        <label>Animal Location
-            <select name="animalLocation">
-                {{{animalLocationOptions}}}
-            </select>
-        </label>
-        <input type="button" id="newLocationButton" onclick="newLocation()" value="Add New Location">
-        <input type="hidden" id="newLocationVal" name="newLocationVal">
-    </div>
-    <div id="newLocation">
-        <label>Location Name:
-            <input id="locationName" name="locationName"/>
-        </label>
-    </div>
-    <div>
-        <label>Enclosure:
-            <select name="enclosure">
-                {{{enclosureOptions}}}
-            </select>
-        </label>
-        <input type="button" id="newEnclosureButton" onclick="newEnclosure()" value="Add New Enclosure">
-        <input type="hidden" id="newEnclosureVal" name="newEnclosureVal">
-        <div id="newEnclosure">
-            <div>
-                <label>Enclosure Name:
-                    <input id="enclosureName" name="enclosureName">
-                </label>
-            </div>
-            <div>
-                <label>Enclosure Dimensions:
-                    <input id="dimensions" name="dimensions">
-                </label>
-            </div>
-            <div>
-                <label>Enclosure Last Cleaned:
-                    <input id="enclosureLastCleaned" name="enclosureLastCleaned" type="datetime-local">
-                </label>
-            </div>
-            <div>
-                <label>Notes on Enclosure:
-                    <input id="enclosureNotes" name="enclosureNotes">
-                </label>
-            </div>
-        </div>
-    </div>
-    <div>
-        <label>Medical Records:
-            <input type="button" onclick="importMedicalRecords()" value="Import Medical Records">
-        </label>
-    </div>
-    <div>
-        <label>Feeding Instructions:
-            <input name="feedingInstructions">
-        </label>
-    </div>
-    <div>
-        <label>Feeding Notes:
-            <input name="feedingNotes">
-        </label>
-    </div>
+    <table>
+        <tr>
+            <td>
+                <label>Animal Name:</label>
+            </td>
+            <td>
+                <input type="text" name="animalName"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Species:</label>
+            </td>
+            <td>
+                <input type="text" name="species"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Age:</label>
+            </td>
+            <td>
+                <input type="number" name="age">
+            </td>
+            <td>
+                <select name="ageUnit">
+                    {{{ageUnitOptions}}}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Weight:</label>
+            </td>
+            <td>
+                <input type="number" name="weight">
+            </td>
+            <td>
+                <select name="weightUnit">
+                    {{{weightUnitOptions}}}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Animal Location:</label>
+
+            </td>
+            <td>
+                <select name="animalLocation">
+                    {{{animalLocationOptions}}}
+                </select>
+            </td>
+            <td>
+                <input type="button" id="newLocationButton" onclick="newLocation()" value="Add New Location">
+                <input type="hidden" id="newLocationVal" name="newLocationVal">
+            </td>
+        </tr>
+        <tr id="newLocation">
+            <td>
+                <label>Location Name:</label>
+            </td>
+            <td>
+                <input id="locationName" name="locationName"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Enclosure:</label>
+            </td>
+            <td>
+                <select name="enclosure">
+                    {{{enclosureOptions}}}
+                </select>
+            </td>
+            <td>
+                <input type="button" id="newEnclosureButton" onclick="newEnclosure()" value="Add New Enclosure">
+                <input type="hidden" id="newEnclosureVal" name="newEnclosureVal">
+            </td>
+        </tr>
+        <tr class="newEnclosure">
+            <td>
+                <label>Enclosure Name:</label>
+            </td>
+            <td>
+                <input id="enclosureName" name="enclosureName">
+            </td>
+        </tr>
+        <tr class="newEnclosure">
+            <td>
+                <label>Enclosure Dimensions:</label>
+            </td>
+            <td>
+                <input id="dimensions" name="dimensions">
+            </td>
+        </tr>
+        <tr class="newEnclosure">
+            <td>
+                <label>Enclosure Last Cleaned:</label>
+            </td>
+            <td>
+                <input id="enclosureLastCleaned" name="enclosureLastCleaned" type="datetime-local">
+            </td>
+        </tr>
+        <tr class="newEnclosure">
+            <td>
+                <label>Notes on Enclosure:</label>
+            </td>
+            <td>
+                <input id="enclosureNotes" name="enclosureNotes">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Medical Records:</label>
+            </td>
+            <td>
+                <input type="button" onclick="importMedicalRecords()" value="Import Medical Records">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Feeding Instructions:</label>
+            </td>
+            <td>
+                <input name="feedingInstructions">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Feeding Notes:</label>
+            </td>
+            <td>
+                <input name="feedingNotes">
+            </td>
+        </tr>
+    </table>
     <div>
         <button type="submit">Submit</button>
     </div>
@@ -121,7 +172,7 @@
 
 <script>
     let enclosureShow = false;
-    const newEnclosureElement = $('#newEnclosure');
+    const newEnclosureElement = $('.newEnclosure');
     let locationShow = false;
     const newLocationElement = $('#newLocation');
 
@@ -130,13 +181,13 @@
         newLocationElement.hide();
     });
 
-    function newEnclosure(){
-        if(enclosureShow){
+    function newEnclosure() {
+        if (enclosureShow) {
             newEnclosureElement.hide();
             $('#newEnclosureButton').val('Add New Enclosure');
             clearEnclosureFields();
             enclosureShow = false;
-        } else{
+        } else {
             newEnclosureElement.show();
             $('#newEnclosureButton').val('Nevermind');
             enclosureShow = true;
@@ -144,20 +195,20 @@
         $('#newEnclosureVal').val(enclosureShow.toString());
     }
 
-    function clearEnclosureFields(){
+    function clearEnclosureFields() {
         $('#enclosureName').val('');
         $('#dimensions').val('');
         $('#enclosureLastCleaned').val('');
         $('#enclosureNotes').val('');
     }
 
-    function newLocation(){
-        if(locationShow){
+    function newLocation() {
+        if (locationShow) {
             newLocationElement.hide();
             $('#newLocationButton').val('Add New Location');
             clearLocationFields();
             locationShow = false;
-        } else{
+        } else {
             newLocationElement.show();
             $('#newLocationButton').val('Nevermind');
             locationShow = true;
@@ -165,11 +216,11 @@
         $('#newLocationVal').val(locationShow.toString());
     }
 
-    function clearLocationFields(){
+    function clearLocationFields() {
         $('#locationName').val('');
     }
 
-    function importMedicalRecords(){
+    function importMedicalRecords() {
         alert('Pay the devs more to get this feature!');
     }
 </script>
