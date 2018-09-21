@@ -48,13 +48,18 @@ let Routes = [
             animal.weight = request.payload.weight;
             animal.weightUnit = getWeightValue(request.payload.weightUnit);
             let enclosure = new Enclosure();
-            if (request.payload.newEnclosure) {
+            if (request.payload.newEnclosureVal) {
                 enclosure.name = request.payload.enclosureName;
                 enclosure.dimensions = request.payload.dimensions;
                 enclosure.lastCleaned = new Date(request.payload.enclosureLastCleaned).getTime();
                 enclosure.notes = request.payload.enclosureNotes;
-            } else {
+            } else if (request.payload.enclosure._id !== 0) {
                 enclosure = request.payload.enclosure;
+            }
+            let feedingInformation = new FeedingInformation();
+            if (request.payload.feedingInstructions || request.payload.feedingNotes) {
+                feedingInformation.instructions = request.payload.feedingInstructions;
+                feedingInformation.notes = request.payload.feedingNotes;
             }
 
             return saveAnimal(animal);

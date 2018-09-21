@@ -40,7 +40,7 @@
             </select>
         </label>
         <input type="button" id="newEnclosureButton" onclick="newEnclosure()" value="Add New Enclosure">
-        <input type="hidden" name="newEnclosure">
+        <input type="hidden" name="newEnclosureVal">
         <div id="newEnclosure">
             <div>
                 <label>Enclosure Name:
@@ -97,6 +97,7 @@
         $('#newEnclosure').val(enclosureShow);
         if(enclosureShow){
             newEnclosureElement.hide();
+            $('#newEnclosureButton').val('Add New Enclosure');
             clearEnclosureFields();
             enclosureShow = false;
         } else{
