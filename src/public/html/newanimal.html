@@ -31,7 +31,20 @@
                 {{{weightUnitOptions}}}
             </select>
         </label>
-
+    </div>
+    <div>
+        <label>Animal Location
+            <select name="animalLocation">
+                {{{animalLocationOptions}}}
+            </select>
+        </label>
+        <input type="button" id="newLocationButton" onclick="newLocation()" value="Add New Location">
+        <input type="hidden" id="newLocationVal" name="newLocationVal">
+    </div>
+    <div id="newLocation">
+        <label>Location Name:
+            <input id="locationName" name="locationName"/>
+        </label>
     </div>
     <div>
         <label>Enclosure:
@@ -40,7 +53,7 @@
             </select>
         </label>
         <input type="button" id="newEnclosureButton" onclick="newEnclosure()" value="Add New Enclosure">
-        <input type="hidden" name="newEnclosureVal">
+        <input type="hidden" id="newEnclosureVal" name="newEnclosureVal">
         <div id="newEnclosure">
             <div>
                 <label>Enclosure Name:
@@ -85,16 +98,39 @@
 </form>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<style>
+    body {
+        padding-left: 20px;
+        padding-top: 10px;
+    }
+</style>
+
 <script>
     let enclosureShow = false;
     const newEnclosureElement = $('#newEnclosure');
+    let locationShow = false;
+    const newLocationElement = $('#newLocation');
 
     $(function () {
         newEnclosureElement.hide();
+        newLocationElement.hide();
     });
 
     function newEnclosure(){
-        $('#newEnclosure').val(enclosureShow);
         if(enclosureShow){
             newEnclosureElement.hide();
             $('#newEnclosureButton').val('Add New Enclosure');
@@ -105,6 +141,7 @@
             $('#newEnclosureButton').val('Nevermind');
             enclosureShow = true;
         }
+        $('#newEnclosureVal').val(enclosureShow.toString());
     }
 
     function clearEnclosureFields(){
@@ -112,6 +149,24 @@
         $('#dimensions').val('');
         $('#enclosureLastCleaned').val('');
         $('#enclosureNotes').val('');
+    }
+
+    function newLocation(){
+        if(locationShow){
+            newLocationElement.hide();
+            $('#newLocationButton').val('Add New Location');
+            clearLocationFields();
+            locationShow = false;
+        } else{
+            newLocationElement.show();
+            $('#newLocationButton').val('Nevermind');
+            locationShow = true;
+        }
+        $('#newLocationVal').val(locationShow.toString());
+    }
+
+    function clearLocationFields(){
+        $('#locationName').val('');
     }
 
     function importMedicalRecords(){

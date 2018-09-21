@@ -1,6 +1,18 @@
 import {AgeUnit} from "../Enums/AgeUnit";
 import {Enclosure} from "../models/Enclosure";
 import {WeightUnit} from "../Enums/WeightUnit";
+import {AnimalLocation} from "../models/AnimalLocation";
+
+export function formatLocationsAsSelectOptions(locations: AnimalLocation[]) {
+    let options:string = '';
+    for (let location of locations) {
+        options += '<option name="' + location._id + '">' + location.name + '</option>';
+    }
+
+    return options;
+}
+
+
 
 export function formatAgeUnitsAsSelectOptions():string {
     let options:string = '';

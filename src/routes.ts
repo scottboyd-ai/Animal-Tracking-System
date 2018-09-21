@@ -6,6 +6,7 @@ import {MedicalRecord} from "./models/MedicalRecord";
 import {FeedingInformation} from "./models/FeedingInformation";
 import {prepareAnimal, saveAnimal} from "./config/Animal/AnimalService";
 import * as EnclosureService from "./config/Enclosure/EnclosureService";
+import * as AnimalLocationService from "./config/AnimalLocation/AnimalLocationService";
 import * as htmlUtil from "./util/htmlUtil";
 import {AgeUnit, getValue as getAgeValue} from "./Enums/AgeUnit";
 import {WeightUnit, getValue as getWeightValue} from "./Enums/WeightUnit";
@@ -28,10 +29,13 @@ let Routes = [
             const weightUnitOptions = htmlUtil.formatWeightUnitsAsSelectOptions();
             const enclosures = await EnclosureService.getAllEnclosures();
             const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
+            const locations = await AnimalLocationService.getAllLocations();
+            const animalLocationOptions = htmlUtil.formatLocationsAsSelectOptions(locations);
             const data = {
                 ageUnitOptions: ageUnitOptions,
                 weightUnitOptions: weightUnitOptions,
-                enclosureOptions: enclosureOptions
+                enclosureOptions: enclosureOptions,
+                animalLocationOptions: animalLocationOptions
             };
             return h.view('newanimal.html', data);
         }
@@ -47,6 +51,13 @@ let Routes = [
             animal.ageUnit = getAgeValue(request.payload.ageUnit);
             animal.weight = request.payload.weight;
             animal.weightUnit = getWeightValue(request.payload.weightUnit);
+            let animalLocation = new AnimalLocation();
+            console.log(request.payload);
+            if(request.payload.newLocationVal){
+                animalLocation.name = request.payload.locationName;
+            } else if (request.payload.animalLocation._id !== 0){
+                animalLocation = request.payload.animalLocation;
+            }
             let enclosure = new Enclosure();
             if (request.payload.newEnclosureVal) {
                 enclosure.name = request.payload.enclosureName;
@@ -61,6 +72,8 @@ let Routes = [
                 feedingInformation.instructions = request.payload.feedingInstructions;
                 feedingInformation.notes = request.payload.feedingNotes;
             }
+
+            animal = await prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
 
             return saveAnimal(animal);
         }

@@ -16,6 +16,7 @@ const MedicalRecord_1 = require("./models/MedicalRecord");
 const FeedingInformation_1 = require("./models/FeedingInformation");
 const AnimalService_1 = require("./config/Animal/AnimalService");
 const EnclosureService = require("./config/Enclosure/EnclosureService");
+const AnimalLocationService = require("./config/AnimalLocation/AnimalLocationService");
 const htmlUtil = require("./util/htmlUtil");
 const AgeUnit_1 = require("./Enums/AgeUnit");
 const WeightUnit_1 = require("./Enums/WeightUnit");
@@ -36,10 +37,13 @@ let Routes = [
                 const weightUnitOptions = htmlUtil.formatWeightUnitsAsSelectOptions();
                 const enclosures = yield EnclosureService.getAllEnclosures();
                 const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
+                const locations = yield AnimalLocationService.getAllLocations();
+                const animalLocationOptions = htmlUtil.formatLocationsAsSelectOptions(locations);
                 const data = {
                     ageUnitOptions: ageUnitOptions,
                     weightUnitOptions: weightUnitOptions,
-                    enclosureOptions: enclosureOptions
+                    enclosureOptions: enclosureOptions,
+                    animalLocationOptions: animalLocationOptions
                 };
                 return h.view('newanimal.html', data);
             });
@@ -57,6 +61,14 @@ let Routes = [
                 animal.ageUnit = AgeUnit_1.getValue(request.payload.ageUnit);
                 animal.weight = request.payload.weight;
                 animal.weightUnit = WeightUnit_1.getValue(request.payload.weightUnit);
+                let animalLocation = new AnimalLocation_1.AnimalLocation();
+                console.log(request.payload);
+                if (request.payload.newLocationVal) {
+                    animalLocation.name = request.payload.locationName;
+                }
+                else if (request.payload.animalLocation._id !== 0) {
+                    animalLocation = request.payload.animalLocation;
+                }
                 let enclosure = new Enclosure_1.Enclosure();
                 if (request.payload.newEnclosureVal) {
                     enclosure.name = request.payload.enclosureName;
@@ -72,6 +84,7 @@ let Routes = [
                     feedingInformation.instructions = request.payload.feedingInstructions;
                     feedingInformation.notes = request.payload.feedingNotes;
                 }
+                animal = yield AnimalService_1.prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
                 return AnimalService_1.saveAnimal(animal);
             });
         }
