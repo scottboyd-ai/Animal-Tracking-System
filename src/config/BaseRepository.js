@@ -15,13 +15,20 @@ class BaseRepository {
     }
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this._collection.deleteOne({ $eq: { _id: id } });
+            const result = yield this._collection.deleteOne({ _id: mongoose.Types.ObjectId(id) });
             return !!result.result.ok;
         });
     }
     update(id, item) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this._collection.updateOne({ $eq: { _id: id } }, item);
+            const result = yield this._collection.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: item });
+            return !!result.result.ok;
+        });
+    }
+    updateById(id, item) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this._collection.updateOne({ _id: id }, { $set: item });
+            console.log(result);
             return !!result.result.ok;
         });
     }
@@ -39,13 +46,18 @@ class BaseRepository {
     }
     findOne(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this._collection.findOne({ $eq: { _id: id } });
+            return yield this._collection.findOne({ _id: id });
         });
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this._collection.find({});
             return result.toArray();
+        });
+    }
+    findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this._collection.findOne({ _id: mongoose.Types.ObjectId(id) });
         });
     }
 }

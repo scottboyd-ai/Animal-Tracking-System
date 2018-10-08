@@ -4,10 +4,11 @@ const Hapi = require('hapi');
 const routes = require('./routes');
 const mongoose = require('mongoose');
 const handlebars = require('handlebars');
+const htmlUtils = require('./util/htmlUtil');
 
 const server = Hapi.server({
     port: 3000,
-    host: 'localhost'
+    host: '10.0.0.68'
 });
 
 server.route(routes);
@@ -18,7 +19,8 @@ const init = async () => {
     await server.register(require('vision'));
 
     const defaultContext = {
-        title: 'Animal Tracking System'
+        title: 'Animal Tracking System',
+        standardImports: htmlUtils.standardImports
         // imports: htmlHelpers.getImports,
         // standardPadding: htmlHelpers.standardPadding
     };

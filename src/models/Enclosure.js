@@ -20,6 +20,10 @@ __decorate([
 __decorate([
     typegoose_1.prop(),
     __metadata("design:type", String)
+], Enclosure.prototype, "number", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", String)
 ], Enclosure.prototype, "dimensions", void 0);
 __decorate([
     typegoose_1.prop(),

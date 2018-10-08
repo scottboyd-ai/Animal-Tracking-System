@@ -80,6 +80,51 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/enclosures',
+        handler: async function (request, h){
+            const enclosures = await EnclosureService.getAllEnclosures();
+            const enclosureTable = htmlUtil.formatEnclosuresAsTable(enclosures);
+            const data = {
+                enclosureTable: enclosureTable
+            };
+            return h.view('editenclosures.html', data);
+        }
+    },
+    {
+        method: 'POST',
+        path: '/enclosures',
+        handler: async function (request, h){
+            const data = {
+                _id: request.payload._id,
+                number: request.payload.number,
+                name: request.payload.name,
+                dimensions: request.payload.dimensions,
+                lastCleaned: new Date(request.payload.lastCleaned).getTime(),
+                notes: request.payload.notes
+            };
+
+            await EnclosureService.updateEnclosure(data);
+            return ('Success');
+
+        }
+    },
+    {
+        method: 'POST',
+        path: '/enclosures/new',
+        handler: async function (request, h){
+            const data = {
+                number: request.payload.number,
+                name: request.payload.name,
+                dimensions: request.payload.dimensions,
+                lastCleaned: new Date(request.payload.lastCleaned).getTime(),
+                notes: request.payload.notes
+            };
+            await EnclosureService.addNewEnclosure(data);
+            return h.redirect('/enclosures');
+        }
+    },
+    {
+        method: 'GET',
         path: '/test',
         handler: async function (request, h) {
             let animal = new Animal();

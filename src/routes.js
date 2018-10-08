@@ -91,6 +91,55 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/enclosures',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const enclosures = yield EnclosureService.getAllEnclosures();
+                const enclosureTable = htmlUtil.formatEnclosuresAsTable(enclosures);
+                const data = {
+                    enclosureTable: enclosureTable
+                };
+                return h.view('editenclosures.html', data);
+            });
+        }
+    },
+    {
+        method: 'POST',
+        path: '/enclosures',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const data = {
+                    _id: request.payload._id,
+                    number: request.payload.number,
+                    name: request.payload.name,
+                    dimensions: request.payload.dimensions,
+                    lastCleaned: new Date(request.payload.lastCleaned).getTime(),
+                    notes: request.payload.notes
+                };
+                yield EnclosureService.updateEnclosure(data);
+                return ('Success');
+            });
+        }
+    },
+    {
+        method: 'POST',
+        path: '/enclosures/new',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const data = {
+                    number: request.payload.number,
+                    name: request.payload.name,
+                    dimensions: request.payload.dimensions,
+                    lastCleaned: new Date(request.payload.lastCleaned).getTime(),
+                    notes: request.payload.notes
+                };
+                yield EnclosureService.addNewEnclosure(data);
+                return h.redirect('/enclosures');
+            });
+        }
+    },
+    {
+        method: 'GET',
         path: '/test',
         handler: function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {

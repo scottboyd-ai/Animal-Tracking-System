@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+<a href="/">Home</a>
+<br>
+<br>
+<input id="newEnclosureButton" type="button" onclick="newEnclosure()" value="New Enclosure">
+<div id="newEnclosure" hidden="hidden">
+    <form id="newEnclosureForm" method="post" action="/enclosures/new">
+        <table>
+            <tr>
+                <td>Enclosure Number:</td>
+                <td><input name="number" required="required"></td>
+            </tr>
+            <tr>
+                <td>Enclosure Name:</td>
+                <td><input name="name" required="required"></td>
+            </tr>
+            <tr>
+                <td>Dimensions:</td>
+                <td><input name="dimensions" required="required"></td>
+            </tr>
+            <tr>
+                <td>Last Cleaned:</td>
+                <td><input type="datetime-local" name="lastCleaned"></td>
+            </tr>
+            <tr>
+                <td>Notes</td>
+                <td><input name="notes"></td>
+            </tr>
+        </table>
+        <button>Save</button>
+    </form>
+</div>
+<br>
+<br>
+<table>
+    {{{enclosureTable}}}
+</table>
+</body>
+{{{standardImports}}}
+<script>
+    let editingEnclosure = {};
+
+    function editEnclosure(enclosureId){
+        alterInputs(true, enclosureId);
+    }
+
+    function cancelEdit(enclosureId){
+        alterInputs(false, enclosureId);
+        resetValues(enclosureId);
+
+    }
+
+    function resetValues(enclosureId){
+        let fieldArray = getFieldArray(enclosureId);
+        for (let property in editingEnclosure) {
+            for (let field of fieldArray) {
+                if (field.name === property) {
+                    field.element.text(editingEnclosure[property]);
+                }
+            }
+        }
+
+    }
+
+    function saveValues(fieldArray){
+        for (let field of fieldArray) {
+            editingEnclosure[field.name] = field.element.text();
+        }
+    }
+
+    function alterInputs(toInputs, enclosureId){
+        const button = $('#' + enclosureId + '_edit');
+        const cancelButton = $('#' + enclosureId + '_cancel');
+        const fieldArray = getFieldArray(enclosureId);
+        if (toInputs) {
+            button.val('Save Changes');
+            button.attr('onclick', 'saveEnclosureChanges(\'' + enclosureId + '\')');
+            cancelButton.attr('type', 'button');
+            cancelButton.val('Cancel');
+            saveValues(fieldArray);
+            textToInputs(fieldArray);
+        }
+        else {
+            button.val('Edit Enclosure');
+            button.attr('onclick', 'editEnclosure(\'' + enclosureId + '\')');
+            inputsToText(fieldArray);
+            cancelButton.attr('type', 'hidden');
+            cancelButton.val('');
+        }
+    }
+
+    function textToInputs(fieldArray){
+        for (let field of fieldArray) {
+            let t = field.element.text();
+            if (field.type === 'datetime-local') {
+                t = new Date(t).toISOString();
+                t = t.replace('Z', '');
+            }
+            field.element.text('').append($('<input />', { 'value': t, 'type': field.type }).val(t));
+        }
+    }
+
+    function inputsToText(fieldArray){
+        for (let field of fieldArray) {
+            if (field.type === 'datetime-local') {
+                field.element.text(new Date(field.element.find('input').val()).toLocaleString())
+            }
+            else {
+                field.element.text(field.element.find('input').val());
+            }
+        }
+    }
+
+    function saveEnclosureChanges(enclosureId){
+        alterInputs(false, enclosureId);
+        const number = $('#' + enclosureId + '_number').text();
+        const name = $('#' + enclosureId + '_name').text();
+        const dimensions = $('#' + enclosureId + '_dimensions').text();
+        const lastCleaned = $('#' + enclosureId + '_lastCleaned').text();
+        const notes = $('#' + enclosureId + '_notes').text();
+        $.post('/enclosures', {
+            _id: enclosureId,
+            number: number,
+            name: name,
+            dimensions: dimensions,
+            lastCleaned: lastCleaned,
+            notes: notes
+        })
+    }
+
+    function getFieldArray(enclosureId){
+        let fieldArray = [];
+        fieldArray.push({ element: $('#' + enclosureId + '_number'), type: 'text', name: 'number' });
+        fieldArray.push({ element: $('#' + enclosureId + '_name'), type: 'text', name: 'name' });
+        fieldArray.push({ element: $('#' + enclosureId + '_dimensions'), type: 'text', name: 'dimensions' });
+        fieldArray.push({
+            element: $('#' + enclosureId + '_lastCleaned'),
+            type: 'datetime-local',
+            name: 'lastCleaned'
+        });
+        fieldArray.push({ element: $('#' + enclosureId + '_notes'), type: 'text', name: 'notes' });
+        return fieldArray;
+    }
+
+    function newEnclosure(){
+        $('#newEnclosure').removeAttr('hidden');
+        const newEnclosureButton = $('#newEnclosureButton')
+        newEnclosureButton.val('Cancel');
+        newEnclosureButton.attr('onclick', 'cancelNewEnclosure()');
+    }
+
+    function cancelNewEnclosure(){
+        $('#newEnclosureForm')[0].reset();
+        $('#newEnclosure').attr('hidden', 'hidden');
+        $('#newEnclosureButton').val('New Enclosure');
+        $('#newEnclosureButton').attr('onclick', 'newEnclosure()');
+    }
+</script>
+</html>
