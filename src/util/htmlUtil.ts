@@ -1,37 +1,41 @@
 import {AgeUnit} from "../Enums/AgeUnit";
 import {Enclosure} from "../models/Enclosure";
-import {WeightUnit} from "../Enums/WeightUnit";
+import * as WeightUnit from "../Enums/WeightUnit";
 import {AnimalLocation} from "../models/AnimalLocation";
 import {Animal} from "../models/Animal";
 import * as Sex from "../Enums/Sex";
 
-// export function formatAnimalsAsList(animals: Animal[]) {
-//     let output:string = '<div><table>';
-//     for (let animal of animals){
-//         output += '<tr><td><b>Name:</b> ' + animal.name + '</td><td><b>Age:</b> ' + animal.age + ' ';
-//         if(animal.ageUnit){
-//             output += AgeUnit.getValue(animal.ageUnit.toString()).toString().toLowerCase();
-//         }
-//         output += '</td><td><b>Species:</b> ' + animal.species + '</td>';
-//         if(animal.sex){
-//             output += '<td><b>Sex:</b> ' + Sex.getValue(animal.sex.toString()).toString() + '</td>';
-//         }
-//         output += '</tr>';
-//     }
-//     return output + '</table></div>';
-// }
+export function formatAnimalsAsTable(animals: Animal[]):string {
+    let output:string = '<table>';
+    for (let animal of animals){
+        let table = '<tr><td><input type="button" id="' + animal._id + '_edit" onclick="editAnimal(' + animal._id + ')" value="Edit Animal">' +
+            '<br><input type="hidden" id="' + animal._id + '_cancel" onclick="cancelEdit(\'' + animal._id + '\')"></td><td><table>';
+        table += '<tr><td>Animal Name:</td><td id="' + animal._id + '_name">' + animal.name + '</td></tr>';
+        table += '<tr><td>Species:</td><td id="' + animal._id + '_species">' + animal.species + '</td></tr>';
+        table += '<tr><td>Date of Birth:</td><td id="' + animal._id + '_dob">' + animal.dob + '</td></tr>';
+        table += '<tr><td>Weight:</td><td id="' + animal._id + '_weight">' + animal.weight + '</td>';
+        if(animal.weightUnit > -1) {
+            table += '<td id="' + animal._id + '_weightUnit">' + WeightUnit.getValue(animal.weightUnit).toString().toLowerCase() + '</td>';
+        }
+        table += '</tr>';
+        table += '<tr><td>Animal Location:</td><td id="' + animal._id + '_location">' + (animal.location as AnimalLocation).name + '</td>';
+        table += '<tr><td>Enclosure:</td><td id="' + animal._id + '_enclosure">' + (animal.enclosure as Enclosure).name + '</td>';
+
+
+        output += table + '</td></tr></table>';
+    }
+    return output + '</table>';
+}
 
 
 export function formatLocationsAsSelectOptions(locations: AnimalLocation[]) {
     let options:string = '';
     for (let location of locations) {
-        options += '<option name="' + location._id + '">' + location.name + '</option>';
+        options += '<option name="location" value="' + location._id +'">' + location.name + '</option>';
     }
 
     return options;
 }
-
-
 
 export function formatAgeUnitsAsSelectOptions():string {
     let options:string = '';
@@ -56,7 +60,7 @@ export function formatWeightUnitsAsSelectOptions():string{
 export function formatEnclosuresAsSelectOptions(enclosures:Enclosure[]):string {
     let options:string = '';
     for (let enclosure of enclosures) {
-        options += '<option name="' + enclosure._id + '">' + enclosure.name + '</option>';
+        options += '<option name="enclosure" value="' + enclosure._id +'">' + enclosure.name + '</option>';
     }
 
     return options;
@@ -66,7 +70,7 @@ export function formatEnclosuresAsTable(enclosures:Enclosure[]):string{
     let tableOutput = '<table>';
     for (let enclosure of enclosures){
         let table:string = '<tr><td><input type="button" id="' + enclosure._id + '_edit" onclick="editEnclosure(\'' + enclosure._id + '\')" value="Edit Enclosure">' +
-            '<br><input type="hidden" id="' + enclosure._id + '_cancel" onclick="cancelEdit(\'' + enclosure._id + '\')"> </td><td><table>';
+            '<br><input type="hidden" id="' + enclosure._id + '_cancel" onclick="cancelEdit(\'' + enclosure._id + '\')"></td><td><table>';
         table += '<tr><td>Enclosure number: </td><td id="' + enclosure._id + '_number">' + enclosure.number + '</td></tr>';
         table += '<tr><td>Enclosure name: </td><td id="' + enclosure._id + '_name">' + enclosure.name + '</td></tr>';
         table += '<tr><td>Dimensions: </td><td id="' + enclosure._id + '_dimensions">' + enclosure.dimensions + '</td></tr>';
@@ -76,7 +80,7 @@ export function formatEnclosuresAsTable(enclosures:Enclosure[]):string{
         }
         table += '</td></tr>';
         table += '<tr><td>Notes: </td><td id="' + enclosure._id + '_notes">' + enclosure.notes +'</td></tr>';
-        tableOutput += table + '</td></tr></table></div>';
+        tableOutput += table + '</td></tr></table>';
     }
 
     return tableOutput + '</table>';

@@ -20,10 +20,18 @@ function prepareAnimal(animal, animalLocation, enclosure, medicalRecords, feedin
             yield animalLocationRepository.create(animalLocation);
             animal.location = animalLocation;
         }
+        else if (animalLocation._id) {
+            const animalLocationRepository = new AnimalLocationRepository_1.AnimalLocationRepository();
+            animal.location = yield animalLocationRepository.findById(animalLocation._id);
+        }
         if (enclosure && !enclosure._id) {
             const enclosureRepository = new EnclosureRepository_1.EnclosureRepository();
             yield enclosureRepository.create(enclosure);
             animal.enclosure = enclosure;
+        }
+        else if (enclosure._id) {
+            const enclosureRepository = new EnclosureRepository_1.EnclosureRepository();
+            animal.enclosure = yield enclosureRepository.findById(enclosure._id);
         }
         if (medicalRecords) {
             const medicalRecordRepository = new MedicalRecordRepository_1.MedicalRecordRepository();

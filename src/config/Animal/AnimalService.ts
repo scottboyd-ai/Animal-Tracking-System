@@ -14,11 +14,17 @@ export async function prepareAnimal(animal:Animal, animalLocation?:AnimalLocatio
         const animalLocationRepository = new AnimalLocationRepository();
         await animalLocationRepository.create(animalLocation);
         animal.location = animalLocation;
+    } else if (animalLocation._id){
+        const animalLocationRepository = new AnimalLocationRepository();
+        animal.location = await animalLocationRepository.findById(animalLocation._id);
     }
     if (enclosure && !enclosure._id) {
         const enclosureRepository = new EnclosureRepository();
         await enclosureRepository.create(enclosure);
         animal.enclosure = enclosure;
+    } else if (enclosure._id){
+        const enclosureRepository = new EnclosureRepository();
+        animal.enclosure = await enclosureRepository.findById(enclosure._id);
     }
     if(medicalRecords){
         const medicalRecordRepository = new MedicalRecordRepository();

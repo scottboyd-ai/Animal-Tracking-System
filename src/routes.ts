@@ -21,6 +21,18 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/animals',
+        handler: async function (request, h) {
+            const animals = await AnimalService.findAllAnimals();
+            const animalsTable = htmlUtil.formatAnimalsAsTable(animals);
+            const data = {
+                animalsTable: animalsTable
+            };
+            return h.view('listanimals.html', data);
+        }
+    },
+    {
+        method: 'GET',
         path: '/animals/new',
         handler: async function (request, h) {
             const ageUnitOptions = htmlUtil.formatAgeUnitsAsSelectOptions();
@@ -52,8 +64,8 @@ let Routes = [
             console.log(request.payload);
             if(request.payload.newLocationVal){
                 animalLocation.name = request.payload.locationName;
-            } else if (request.payload.animalLocation._id !== 0){
-                animalLocation = request.payload.animalLocation;
+            } else if (request.payload.animalLocation){
+                animalLocation._id = request.payload.animalLocation;
             }
             let enclosure = new Enclosure();
             if (request.payload.newEnclosureVal) {
@@ -61,8 +73,8 @@ let Routes = [
                 enclosure.dimensions = request.payload.dimensions;
                 enclosure.lastCleaned = new Date(request.payload.enclosureLastCleaned).getTime();
                 enclosure.notes = request.payload.enclosureNotes;
-            } else if (request.payload.enclosure._id !== 0) {
-                enclosure = request.payload.enclosure;
+            } else if (request.payload.enclosure) {
+                enclosure._id = request.payload.enclosure;
             }
             let feedingInformation = new FeedingInformation();
             if (request.payload.feedingInstructions || request.payload.feedingNotes) {
