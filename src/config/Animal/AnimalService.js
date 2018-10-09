@@ -52,4 +52,11 @@ function saveAnimal(animal) {
     });
 }
 exports.saveAnimal = saveAnimal;
+function findAllAnimals() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const animalRepository = new AnimalRepository_1.AnimalRepository();
+        return yield animalRepository.findAll();
+    });
+}
+exports.findAllAnimals = findAllAnimals;
 //# sourceMappingURL=AnimalService.js.map

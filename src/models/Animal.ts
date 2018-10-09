@@ -5,7 +5,6 @@ import {Enclosure} from "./Enclosure";
 import {MedicalRecord} from "./MedicalRecord";
 import {FeedingInformation} from "./FeedingInformation";
 import {BaseModel} from "./BaseModel";
-import {AgeUnit} from "../Enums/AgeUnit";
 import {WeightUnit} from "../Enums/WeightUnit";
 
 export class Animal extends BaseModel{
@@ -16,9 +15,7 @@ export class Animal extends BaseModel{
     @prop()
     species: string;
     @prop()
-    age: number;
-    @prop({enum: AgeUnit})
-    ageUnit: AgeUnit;
+    dob: Date;
     @prop({enum: Sex})
     sex: Sex;
     @prop()

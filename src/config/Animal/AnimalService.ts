@@ -44,3 +44,8 @@ export async function saveAnimal(animal: Animal) {
     const animalRepository = new AnimalRepository();
     return await animalRepository.create(animal);
 }
+
+export async function findAllAnimals(){
+    const animalRepository = new AnimalRepository();
+    return await animalRepository.findAll();
+}

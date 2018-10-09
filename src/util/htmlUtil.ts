@@ -2,6 +2,25 @@ import {AgeUnit} from "../Enums/AgeUnit";
 import {Enclosure} from "../models/Enclosure";
 import {WeightUnit} from "../Enums/WeightUnit";
 import {AnimalLocation} from "../models/AnimalLocation";
+import {Animal} from "../models/Animal";
+import * as Sex from "../Enums/Sex";
+
+// export function formatAnimalsAsList(animals: Animal[]) {
+//     let output:string = '<div><table>';
+//     for (let animal of animals){
+//         output += '<tr><td><b>Name:</b> ' + animal.name + '</td><td><b>Age:</b> ' + animal.age + ' ';
+//         if(animal.ageUnit){
+//             output += AgeUnit.getValue(animal.ageUnit.toString()).toString().toLowerCase();
+//         }
+//         output += '</td><td><b>Species:</b> ' + animal.species + '</td>';
+//         if(animal.sex){
+//             output += '<td><b>Sex:</b> ' + Sex.getValue(animal.sex.toString()).toString() + '</td>';
+//         }
+//         output += '</tr>';
+//     }
+//     return output + '</table></div>';
+// }
+
 
 export function formatLocationsAsSelectOptions(locations: AnimalLocation[]) {
     let options:string = '';

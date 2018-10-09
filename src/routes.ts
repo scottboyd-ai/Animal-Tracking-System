@@ -4,14 +4,12 @@ import {AnimalLocation} from "./models/AnimalLocation";
 import {Enclosure} from "./models/Enclosure";
 import {MedicalRecord} from "./models/MedicalRecord";
 import {FeedingInformation} from "./models/FeedingInformation";
-import {prepareAnimal, saveAnimal} from "./config/Animal/AnimalService";
+import * as AnimalService from "./config/Animal/AnimalService";
 import * as EnclosureService from "./config/Enclosure/EnclosureService";
 import * as AnimalLocationService from "./config/AnimalLocation/AnimalLocationService";
 import * as htmlUtil from "./util/htmlUtil";
 import {AgeUnit, getValue as getAgeValue} from "./Enums/AgeUnit";
 import {WeightUnit, getValue as getWeightValue} from "./Enums/WeightUnit";
-
-
 
 let Routes = [
     {
@@ -47,8 +45,7 @@ let Routes = [
             let animal = new Animal();
             animal.name = request.payload.animalName;
             animal.species = request.payload.species;
-            animal.age = request.payload.age;
-            animal.ageUnit = getAgeValue(request.payload.ageUnit);
+            animal.dob = request.payload.dob;
             animal.weight = request.payload.weight;
             animal.weightUnit = getWeightValue(request.payload.weightUnit);
             let animalLocation = new AnimalLocation();
@@ -73,9 +70,9 @@ let Routes = [
                 feedingInformation.notes = request.payload.feedingNotes;
             }
 
-            animal = await prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
+            animal = await AnimalService.prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
 
-            return saveAnimal(animal);
+            return AnimalService.saveAnimal(animal);
         }
     },
     {
@@ -132,7 +129,7 @@ let Routes = [
             let animalLocation = new AnimalLocation();
             animalLocation.name = 'new location';
             animal.species = 'snek';
-            animal.age = 23;
+            animal.dob = new Date();
             animal.sex = Sex.FEMALE;
             animal.weight = 42;
             let enclosure = new Enclosure();
@@ -149,8 +146,8 @@ let Routes = [
             feedingInfo.instructions = 'feed it';
             feedingInfo.notes = 'feed it good';
 
-            animal = await prepareAnimal(animal, animalLocation, enclosure, medicalRecords, feedingInfo);
-            return saveAnimal(animal);
+            animal = await AnimalService.prepareAnimal(animal, animalLocation, enclosure, medicalRecords, feedingInfo);
+            return AnimalService.saveAnimal(animal);
         }
     },
     {

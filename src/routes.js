@@ -14,11 +14,10 @@ const AnimalLocation_1 = require("./models/AnimalLocation");
 const Enclosure_1 = require("./models/Enclosure");
 const MedicalRecord_1 = require("./models/MedicalRecord");
 const FeedingInformation_1 = require("./models/FeedingInformation");
-const AnimalService_1 = require("./config/Animal/AnimalService");
+const AnimalService = require("./config/Animal/AnimalService");
 const EnclosureService = require("./config/Enclosure/EnclosureService");
 const AnimalLocationService = require("./config/AnimalLocation/AnimalLocationService");
 const htmlUtil = require("./util/htmlUtil");
-const AgeUnit_1 = require("./Enums/AgeUnit");
 const WeightUnit_1 = require("./Enums/WeightUnit");
 let Routes = [
     {
@@ -57,8 +56,7 @@ let Routes = [
                 let animal = new Animal_1.Animal();
                 animal.name = request.payload.animalName;
                 animal.species = request.payload.species;
-                animal.age = request.payload.age;
-                animal.ageUnit = AgeUnit_1.getValue(request.payload.ageUnit);
+                animal.dob = request.payload.dob;
                 animal.weight = request.payload.weight;
                 animal.weightUnit = WeightUnit_1.getValue(request.payload.weightUnit);
                 let animalLocation = new AnimalLocation_1.AnimalLocation();
@@ -84,8 +82,8 @@ let Routes = [
                     feedingInformation.instructions = request.payload.feedingInstructions;
                     feedingInformation.notes = request.payload.feedingNotes;
                 }
-                animal = yield AnimalService_1.prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
-                return AnimalService_1.saveAnimal(animal);
+                animal = yield AnimalService.prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
+                return AnimalService.saveAnimal(animal);
             });
         }
     },
@@ -148,7 +146,7 @@ let Routes = [
                 let animalLocation = new AnimalLocation_1.AnimalLocation();
                 animalLocation.name = 'new location';
                 animal.species = 'snek';
-                animal.age = 23;
+                animal.dob = new Date();
                 animal.sex = Sex_1.Sex.FEMALE;
                 animal.weight = 42;
                 let enclosure = new Enclosure_1.Enclosure();
@@ -164,8 +162,8 @@ let Routes = [
                 let feedingInfo = new FeedingInformation_1.FeedingInformation();
                 feedingInfo.instructions = 'feed it';
                 feedingInfo.notes = 'feed it good';
-                animal = yield AnimalService_1.prepareAnimal(animal, animalLocation, enclosure, medicalRecords, feedingInfo);
-                return AnimalService_1.saveAnimal(animal);
+                animal = yield AnimalService.prepareAnimal(animal, animalLocation, enclosure, medicalRecords, feedingInfo);
+                return AnimalService.saveAnimal(animal);
             });
         }
     },
