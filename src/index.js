@@ -13,9 +13,13 @@ const mongoose = require('mongoose');
 const handlebars = require('handlebars');
 const htmlUtils = require('./util/htmlUtil');
 require('source-map-support').install();
+// const server = Hapi.server({
+//     port: 3001,
+//     host: 'localhost'
+// });
 const server = Hapi.server({
-    port: 3001,
-    host: 'localhost'
+    port: 3000,
+    host: '10.0.0.68'
 });
 server.route(routes);
 const init = () => __awaiter(this, void 0, void 0, function* () {
