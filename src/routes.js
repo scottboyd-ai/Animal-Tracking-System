@@ -152,6 +152,15 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/images/{path}',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return h.file('/public/img/' + request.params.path);
+            });
+        }
+    },
+    {
+        method: 'GET',
         path: '/test',
         handler: function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {

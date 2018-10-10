@@ -134,6 +134,13 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/images/{path}',
+        handler: async function (request, h){
+            return h.file('/public/img/' + request.params.path);
+        }
+    },
+    {
+        method: 'GET',
         path: '/test',
         handler: async function (request, h) {
             let animal = new Animal();
