@@ -7,7 +7,12 @@ var Sex;
     Sex[Sex["UNKNOWN"] = 2] = "UNKNOWN";
 })(Sex = exports.Sex || (exports.Sex = {}));
 function getValue(value) {
-    return Sex[value.toUpperCase()];
+    if (typeof value === 'string') {
+        return Sex[value.toUpperCase()];
+    }
+    else if (typeof value === 'number') {
+        return Sex[value];
+    }
 }
 exports.getValue = getValue;
 //# sourceMappingURL=Sex.js.map

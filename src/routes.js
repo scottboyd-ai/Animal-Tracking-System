@@ -52,11 +52,13 @@ let Routes = [
                 const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
                 const locations = yield AnimalLocationService.getAllLocations();
                 const animalLocationOptions = htmlUtil.formatLocationsAsSelectOptions(locations);
+                const sexOptions = htmlUtil.formatSexAsOptions();
                 const data = {
                     ageUnitOptions: ageUnitOptions,
                     weightUnitOptions: weightUnitOptions,
                     enclosureOptions: enclosureOptions,
-                    animalLocationOptions: animalLocationOptions
+                    animalLocationOptions: animalLocationOptions,
+                    sexOptions: sexOptions
                 };
                 return h.view('newanimal.html', data);
             });
@@ -74,7 +76,6 @@ let Routes = [
                 animal.weight = request.payload.weight;
                 animal.weightUnit = WeightUnit_1.getValue(request.payload.weightUnit);
                 let animalLocation = new AnimalLocation_1.AnimalLocation();
-                console.log(request.payload);
                 if (request.payload.newLocationVal) {
                     animalLocation.name = request.payload.locationName;
                 }
@@ -97,7 +98,8 @@ let Routes = [
                     feedingInformation.notes = request.payload.feedingNotes;
                 }
                 animal = yield AnimalService.prepareAnimal(animal, animalLocation, enclosure, null, feedingInformation);
-                return AnimalService.saveAnimal(animal);
+                AnimalService.saveAnimal(animal);
+                return h.redirect('/animals');
             });
         }
     },

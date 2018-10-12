@@ -1,18 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const AgeUnit_1 = require("../Enums/AgeUnit");
-const WeightUnit = require("../Enums/WeightUnit");
+const WeightUnit_1 = require("../Enums/WeightUnit");
+const Sex_1 = require("../Enums/Sex");
+function formatSexAsOptions() {
+    let options = '';
+    for (let sex of Object.keys(Sex_1.Sex)) {
+        if (isNaN(Number(sex))) {
+            options += '<option name="' + sex + '">' + sex.toLowerCase() + '</option>';
+        }
+    }
+    return options;
+}
+exports.formatSexAsOptions = formatSexAsOptions;
 function formatAnimalsAsTable(animals) {
     let output = '<table>';
     for (let animal of animals) {
-        let table = '<tr><td><input type="button" id="' + animal._id + '_edit" onclick="editAnimal(' + animal._id + ')" value="Edit Animal">' +
+        let table = '<tr><td><input type="button" id="' + animal._id + '_edit" onclick="editAnimal(\'' + animal._id + '\')" value="Edit Animal">' +
             '<br><input type="hidden" id="' + animal._id + '_cancel" onclick="cancelEdit(\'' + animal._id + '\')"></td><td><table>';
         table += '<tr><td>Animal Name:</td><td id="' + animal._id + '_name">' + animal.name + '</td></tr>';
         table += '<tr><td>Species:</td><td id="' + animal._id + '_species">' + animal.species + '</td></tr>';
+        table += '<tr><td>Sex:</td><td id="' + animal._id + '_sex">' + Sex_1.getValue(animal.sex) + '</td></tr>';
         table += '<tr><td>Date of Birth:</td><td id="' + animal._id + '_dob">' + animal.dob + '</td></tr>';
         table += '<tr><td>Weight:</td><td id="' + animal._id + '_weight">' + animal.weight + '</td>';
         if (animal.weightUnit > -1) {
-            table += '<td id="' + animal._id + '_weightUnit">' + WeightUnit.getValue(animal.weightUnit).toString().toLowerCase() + '</td>';
+            table += '<td id="' + animal._id + '_weightUnit">' + WeightUnit_1.getValue(animal.weightUnit).toString().toLowerCase() + '</td>';
         }
         table += '</tr>';
         table += '<tr><td>Animal Location:</td><td id="' + animal._id + '_location">' + animal.location.name + '</td>';
@@ -42,7 +54,7 @@ function formatAgeUnitsAsSelectOptions() {
 exports.formatAgeUnitsAsSelectOptions = formatAgeUnitsAsSelectOptions;
 function formatWeightUnitsAsSelectOptions() {
     let options = '';
-    for (let unit of Object.keys(WeightUnit)) {
+    for (let unit of Object.keys(WeightUnit_1.WeightUnit)) {
         if (isNaN(Number(unit))) {
             options += '<option name="' + unit + '">' + unit.toLowerCase() + '</option>';
         }

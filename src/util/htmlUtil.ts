@@ -1,26 +1,37 @@
 import {AgeUnit} from "../Enums/AgeUnit";
 import {Enclosure} from "../models/Enclosure";
-import * as WeightUnit from "../Enums/WeightUnit";
+import {WeightUnit, getValue as getWeightUnitValue} from "../Enums/WeightUnit";
 import {AnimalLocation} from "../models/AnimalLocation";
 import {Animal} from "../models/Animal";
-import * as Sex from "../Enums/Sex";
+import {Sex, getValue as getSexValue} from "../Enums/Sex";
+
+export function formatSexAsOptions() {
+    let options:string = '';
+    for(let sex of Object.keys(Sex)){
+        if (isNaN(Number(sex))) {
+            options += '<option name="' + sex + '">' + sex.toLowerCase() + '</option>';
+        }
+    }
+    return options;
+}
+
 
 export function formatAnimalsAsTable(animals: Animal[]):string {
     let output:string = '<table>';
     for (let animal of animals){
-        let table = '<tr><td><input type="button" id="' + animal._id + '_edit" onclick="editAnimal(' + animal._id + ')" value="Edit Animal">' +
+        let table = '<tr><td><input type="button" id="' + animal._id + '_edit" onclick="editAnimal(\'' + animal._id + '\')" value="Edit Animal">' +
             '<br><input type="hidden" id="' + animal._id + '_cancel" onclick="cancelEdit(\'' + animal._id + '\')"></td><td><table>';
         table += '<tr><td>Animal Name:</td><td id="' + animal._id + '_name">' + animal.name + '</td></tr>';
         table += '<tr><td>Species:</td><td id="' + animal._id + '_species">' + animal.species + '</td></tr>';
+        table += '<tr><td>Sex:</td><td id="' + animal._id + '_sex">' + getSexValue(animal.sex) + '</td></tr>';
         table += '<tr><td>Date of Birth:</td><td id="' + animal._id + '_dob">' + animal.dob + '</td></tr>';
         table += '<tr><td>Weight:</td><td id="' + animal._id + '_weight">' + animal.weight + '</td>';
         if(animal.weightUnit > -1) {
-            table += '<td id="' + animal._id + '_weightUnit">' + WeightUnit.getValue(animal.weightUnit).toString().toLowerCase() + '</td>';
+            table += '<td id="' + animal._id + '_weightUnit">' + getWeightUnitValue(animal.weightUnit).toString().toLowerCase() + '</td>';
         }
         table += '</tr>';
         table += '<tr><td>Animal Location:</td><td id="' + animal._id + '_location">' + (animal.location as AnimalLocation).name + '</td>';
         table += '<tr><td>Enclosure:</td><td id="' + animal._id + '_enclosure">' + (animal.enclosure as Enclosure).name + '</td>';
-
 
         output += table + '</td></tr></table>';
     }

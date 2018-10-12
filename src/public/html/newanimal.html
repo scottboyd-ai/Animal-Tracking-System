@@ -5,6 +5,11 @@
     <title>{{title}}</title>
 </head>
 <body>
+<a href="/">Home</a>
+<br>
+<a href="/animals">Animals List</a>
+<br>
+<br>
 <form action="/animals/new" method="post">
     <table>
         <tr>
@@ -21,6 +26,16 @@
             </td>
             <td>
                 <input type="text" name="species"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Sex:</label>
+            </td>
+            <td>
+                <select name="sex">
+                    {{{sexOptions}}}
+                </select>
             </td>
         </tr>
         <tr>

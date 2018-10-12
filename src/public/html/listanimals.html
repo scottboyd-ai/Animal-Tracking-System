@@ -5,45 +5,135 @@
     <title>{{title}}</title>
 </head>
 <body>
-<div class="cd-fixed-bg cd-bg-1">
-    <header>
-        <div class=container>
-            <div class=intro-text>
-                <div class=title-spacing>
-                    <div class=intro-lead-in><img class="center1 img-responsive center-block"
-                                                  src=/public/images/DemDis.png alt="Democratic Discourse"></div>
-                </div>
-            </div>
-        </div>
-    </header>
-</div>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class=container>
-        <div class="container-fluid page-scroll">
-            <div class=navbar-header>
-                <button type=button class="navbar-toggle collapsed" data-toggle=collapse
-                        data-target=#bs-example-navbar-collapse-1 aria-expanded=false><span class=sr-only>Toggle navigation</span>
-                    <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button>
-                <a class="navbar-brand center" style=text-align:center href="/"><img class=center1
-                                                                                           src="/images/Google_2015_logo.svg"
-                                                                                           alt="Democratic Discourse"
-                                                                                           style=width:51px;height:47px></a>
-            </div>
-            <div class="collapse navbar-collapse" id=bs-example-navbar-collapse-1>
-                <ul class="nav navbar-nav navbar-right nav-menu" id=menu-primary-navigation>
-                    <li><a href=# class=page-scroll><i class="fa fa-user"></i>&#160;&#160;Profile</a></li>
-                    <li><a href=/logout class=page-scroll><i class="fa fa-sign-out"></i>&#160;Log out</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-<div>
     <a href="/">Home</a>
+    <br>
+    <a href="/animals/new">Add New Animal</a>
 </div>
 {{{animalsTable}}}
 </body>
 {{{standardImports}}}
 
+<script>
+    let editingAnimal = {};
 
+    function editAnimal(animalId){
+        alterInputs(true, animalId);
+    }
+
+    function cancelEdit(animalId){
+        alterInputs(false, animalId);
+        resetValues(animalId);
+
+    }
+
+    function resetValues(animalId){
+        let fieldArray = getFieldArray(animalId);
+        for (let property in editingAnimal) {
+            for (let field of fieldArray) {
+                if (field.name === property) {
+                    field.element.text(editingAnimal[property]);
+                }
+            }
+        }
+
+    }
+
+    function saveValues(fieldArray){
+        for (let field of fieldArray) {
+            editingAnimal[field.name] = field.element.text();
+        }
+    }
+
+    function alterInputs(toInputs, animalId){
+        const button = $('#' + animalId + '_edit');
+        const cancelButton = $('#' + animalId + '_cancel');
+        const fieldArray = getFieldArray(animalId);
+        if (toInputs) {
+            button.val('Save Changes');
+            button.attr('onclick', 'saveAnimalChanges(\'' + animalId + '\')');
+            cancelButton.attr('type', 'button');
+            cancelButton.val('Cancel');
+            saveValues(fieldArray);
+            textToInputs(fieldArray);
+        }
+        else {
+            button.val('Edit Animal');
+            button.attr('onclick', 'editAnimal(\'' + animalId + '\')');
+            inputsToText(fieldArray);
+            cancelButton.attr('type', 'hidden');
+            cancelButton.val('');
+        }
+    }
+
+    function textToInputs(fieldArray){
+        for (let field of fieldArray) {
+            let t = field.element.text();
+            if (t && t !== 'undefined' &&  field.type === 'datetime-local') {
+                t = new Date(t).toISOString();
+                t = t.replace('Z', '');
+            } else if (field.type === 'select'){
+              field.element.text('').append($('<select>'))
+            }
+            field.element.text('').append($('<input />', { 'value': t, 'type': field.type }).val(t));
+        }
+    }
+
+    function inputsToText(fieldArray){
+        for (let field of fieldArray) {
+            if (field.type === 'datetime-local') {
+                field.element.text(new Date(field.element.find('input').val()).toLocaleString())
+            }
+            else {
+                field.element.text(field.element.find('input').val());
+            }
+        }
+    }
+
+    function saveAnimalChanges(animalId){
+        alterInputs(false, animalId);
+        const name = $('#' + animalId + '_name').text();
+        const species = $('#' + animalId + '_species').text();
+        const sex = $('#' + animalId + '_sex').text();
+        const dob = $('#' + animalId + '_dob').text();
+        const weight = $('#' + animalId + '_weight').text();
+        const weightUnit = $('#' + animalId + '_weightUnit').text();
+        const location = $('#' + animalId + '_location').text();
+        const enclosure = $('#' + animalId + '_enclosure').text();
+        $.post('/animals', {
+            _id: animalId,
+            name: name
+        })
+    }
+
+    function getFieldArray(animalId){
+        let fieldArray = [];
+        fieldArray.push({ element: $('#' + animalId + '_name'), type: 'text', name: 'name' });
+        fieldArray.push({ element: $('#' + animalId + '_species'), type: 'text', name: 'species' });
+        fieldArray.push({ element: $('#' + animalId + '_sex'), type: 'select', name: 'sex' });
+        fieldArray.push({
+            element: $('#' + animalId + '_dob'),
+            type: 'datetime-local',
+            name: 'dob'
+        });
+        fieldArray.push({ element: $('#' + animalId + '_weight'), type: 'text', name: 'weight' });
+        fieldArray.push({ element: $('#' + animalId + '_weightUnit'), type: 'text', name: 'weightUnit' });
+        fieldArray.push({ element: $('#' + animalId + '_location'), type: 'select', name: 'location' });
+        fieldArray.push({ element: $('#' + animalId + '_enclosure'), type: 'select', name: 'enclosure' });
+        return fieldArray;
+    }
+
+    function newAnimal(){
+        $('#newAnimal').removeAttr('hidden');
+        const newAnimalButton = $('#newAnimalButton')
+        newAnimalButton.val('Cancel');
+        newAnimalButton.attr('onclick', 'cancelNewAnimal()');
+    }
+
+    function cancelNewAnimal(){
+        $('#newAnimalForm')[0].reset();
+        $('#newAnimal').attr('hidden', 'hidden');
+        $('#newAnimalButton').val('New Animal');
+        $('#newAnimalButton').attr('onclick', 'newAnimal()');
+    }
+</script>
 </html>
