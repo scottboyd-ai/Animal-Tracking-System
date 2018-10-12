@@ -42,11 +42,23 @@ let Routes = [
         }
     },
     {
+        method: 'POST',
+        path: '/animals',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const data = {
+                    name: request.payload.name,
+                    species: request.payload.species,
+                    sex: request.payload.sex
+                };
+            });
+        }
+    },
+    {
         method: 'GET',
         path: '/animals/new',
         handler: function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
-                const ageUnitOptions = htmlUtil.formatAgeUnitsAsSelectOptions();
                 const weightUnitOptions = htmlUtil.formatWeightUnitsAsSelectOptions();
                 const enclosures = yield EnclosureService.getAllEnclosures();
                 const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
@@ -54,7 +66,6 @@ let Routes = [
                 const animalLocationOptions = htmlUtil.formatLocationsAsSelectOptions(locations);
                 const sexOptions = htmlUtil.formatSexAsOptions();
                 const data = {
-                    ageUnitOptions: ageUnitOptions,
                     weightUnitOptions: weightUnitOptions,
                     enclosureOptions: enclosureOptions,
                     animalLocationOptions: animalLocationOptions,
@@ -154,10 +165,35 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/selectOptions/{type}',
+        handler: function (request, h) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let options = '';
+                switch (request.params.type) {
+                    case 'sex':
+                        options = htmlUtil.formatSexAsOptions();
+                        break;
+                    case 'location':
+                        const locations = yield AnimalLocationService.getAllLocations();
+                        options = htmlUtil.formatLocationsAsSelectOptions(locations);
+                        break;
+                    case 'enclosure':
+                        const enclosures = yield EnclosureService.getAllEnclosures();
+                        options = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
+                        break;
+                    default:
+                        break;
+                }
+                return options;
+            });
+        }
+    },
+    {
+        method: 'GET',
         path: '/images/{path}',
         handler: function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
-                return h.file('/public/img/' + request.params.path);
+                return h.file('./src/public/img/' + request.params.path, { confine: false });
             });
         }
     },

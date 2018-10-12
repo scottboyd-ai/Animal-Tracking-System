@@ -5,10 +5,9 @@
     <title>{{title}}</title>
 </head>
 <body>
-    <a href="/">Home</a>
-    <br>
-    <a href="/animals/new">Add New Animal</a>
-</div>
+<a href="/">Home</a>
+<br>
+<a href="/animals/new">Add New Animal</a>
 {{{animalsTable}}}
 </body>
 {{{standardImports}}}
@@ -16,17 +15,17 @@
 <script>
     let editingAnimal = {};
 
-    function editAnimal(animalId){
+    function editAnimal(animalId) {
         alterInputs(true, animalId);
     }
 
-    function cancelEdit(animalId){
+    function cancelEdit(animalId) {
         alterInputs(false, animalId);
+        cancelNewAnimalLocation(animalId);
         resetValues(animalId);
-
     }
 
-    function resetValues(animalId){
+    function resetValues(animalId) {
         let fieldArray = getFieldArray(animalId);
         for (let property in editingAnimal) {
             for (let field of fieldArray) {
@@ -35,53 +34,58 @@
                 }
             }
         }
-
     }
 
-    function saveValues(fieldArray){
+    function saveValues(fieldArray) {
         for (let field of fieldArray) {
             editingAnimal[field.name] = field.element.text();
         }
     }
 
-    function alterInputs(toInputs, animalId){
+    function alterInputs(toInputs, animalId) {
         const button = $('#' + animalId + '_edit');
         const cancelButton = $('#' + animalId + '_cancel');
         const fieldArray = getFieldArray(animalId);
         if (toInputs) {
+            $('#' + animalId + '_newLocationButton').attr('hidden', false);
             button.val('Save Changes');
             button.attr('onclick', 'saveAnimalChanges(\'' + animalId + '\')');
             cancelButton.attr('type', 'button');
             cancelButton.val('Cancel');
             saveValues(fieldArray);
-            textToInputs(fieldArray);
+            textToInputs(fieldArray, animalId);
         }
         else {
             button.val('Edit Animal');
             button.attr('onclick', 'editAnimal(\'' + animalId + '\')');
-            inputsToText(fieldArray);
+            inputsToText(fieldArray, animalId);
             cancelButton.attr('type', 'hidden');
             cancelButton.val('');
         }
     }
 
-    function textToInputs(fieldArray){
+    function textToInputs(fieldArray, animalId) {
         for (let field of fieldArray) {
             let t = field.element.text();
-            if (t && t !== 'undefined' &&  field.type === 'datetime-local') {
+            if (t && t !== 'undefined' && field.type === 'datetime-local') {
                 t = new Date(t).toISOString();
                 t = t.replace('Z', '');
-            } else if (field.type === 'select'){
-              field.element.text('').append($('<select>'))
+            } else if (field.type === 'select') {
+                $.get('/selectOptions/' + field.name, function (value) {
+                    field.element.replaceWith('<select id="' + animalId + '_' + field.name + '" name="' + field.name + '">' + value + '</select>');
+                });
+
             }
-            field.element.text('').append($('<input />', { 'value': t, 'type': field.type }).val(t));
+            field.element.text('').append($('<input />', {'value': t, 'type': field.type}).val(t));
         }
     }
 
-    function inputsToText(fieldArray){
+    function inputsToText(fieldArray, animalId) {
         for (let field of fieldArray) {
             if (field.type === 'datetime-local') {
                 field.element.text(new Date(field.element.find('input').val()).toLocaleString())
+            } else if (field.type === 'select') {
+                field.element.replaceWith('<td id="' + animalId + '_' + field.name + '">' + editingAnimal[field.name] + '</td>');
             }
             else {
                 field.element.text(field.element.find('input').val());
@@ -89,7 +93,9 @@
         }
     }
 
-    function saveAnimalChanges(animalId){
+    function saveAnimalChanges(animalId) {
+        const fieldArray = getFieldArray(animalId);
+        saveValues(fieldArray);
         alterInputs(false, animalId);
         const name = $('#' + animalId + '_name').text();
         const species = $('#' + animalId + '_species').text();
@@ -105,35 +111,36 @@
         })
     }
 
-    function getFieldArray(animalId){
+    function getFieldArray(animalId) {
         let fieldArray = [];
-        fieldArray.push({ element: $('#' + animalId + '_name'), type: 'text', name: 'name' });
-        fieldArray.push({ element: $('#' + animalId + '_species'), type: 'text', name: 'species' });
-        fieldArray.push({ element: $('#' + animalId + '_sex'), type: 'select', name: 'sex' });
+        fieldArray.push({element: $('#' + animalId + '_name'), type: 'text', name: 'name'});
+        fieldArray.push({element: $('#' + animalId + '_species'), type: 'text', name: 'species'});
+        fieldArray.push({element: $('#' + animalId + '_sex'), type: 'select', name: 'sex'});
         fieldArray.push({
             element: $('#' + animalId + '_dob'),
             type: 'datetime-local',
             name: 'dob'
         });
-        fieldArray.push({ element: $('#' + animalId + '_weight'), type: 'text', name: 'weight' });
-        fieldArray.push({ element: $('#' + animalId + '_weightUnit'), type: 'text', name: 'weightUnit' });
-        fieldArray.push({ element: $('#' + animalId + '_location'), type: 'select', name: 'location' });
-        fieldArray.push({ element: $('#' + animalId + '_enclosure'), type: 'select', name: 'enclosure' });
+        fieldArray.push({element: $('#' + animalId + '_weight'), type: 'text', name: 'weight'});
+        fieldArray.push({element: $('#' + animalId + '_weightUnit'), type: 'text', name: 'weightUnit'});
+        fieldArray.push({element: $('#' + animalId + '_location'), type: 'select', name: 'location'});
+        fieldArray.push({element: $('#' + animalId + '_enclosure'), type: 'select', name: 'enclosure'});
         return fieldArray;
     }
 
-    function newAnimal(){
-        $('#newAnimal').removeAttr('hidden');
-        const newAnimalButton = $('#newAnimalButton')
+    function newLocation(animalId) {
+        $('#' + animalId + '_newLocation').removeAttr('hidden');
+        const newAnimalButton = $('#' + animalId + '_newLocationButton');
         newAnimalButton.val('Cancel');
-        newAnimalButton.attr('onclick', 'cancelNewAnimal()');
+        newAnimalButton.attr('onclick', 'cancelNewAnimalLocation(\'' + animalId + '\')');
     }
 
-    function cancelNewAnimal(){
-        $('#newAnimalForm')[0].reset();
-        $('#newAnimal').attr('hidden', 'hidden');
-        $('#newAnimalButton').val('New Animal');
-        $('#newAnimalButton').attr('onclick', 'newAnimal()');
+    function cancelNewAnimalLocation(animalId) {
+        $('#' + animalId + '_newLocationName').val('');
+        $('#' + animalId + '_newLocation').attr('hidden', 'hidden');
+        const newLocationButton = $('#' + animalId + '_newLocationButton');
+        newLocationButton.val('New Animal');
+        newLocationButton.attr('onclick', 'newLocation(\'' + animalId + '\')');
     }
 </script>
 </html>

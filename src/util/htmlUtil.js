@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const AgeUnit_1 = require("../Enums/AgeUnit");
 const WeightUnit_1 = require("../Enums/WeightUnit");
 const Sex_1 = require("../Enums/Sex");
 function formatSexAsOptions() {
@@ -28,8 +27,12 @@ function formatAnimalsAsTable(animals) {
         }
         table += '</tr>';
         table += '<tr><td>Animal Location:</td><td id="' + animal._id + '_location">' + animal.location.name + '</td>';
+        table += '<td><input hidden="hidden" type="button" id="' + animal._id + '_newLocationButton" onclick="newLocation(\'' + animal._id + '\')" value="New Location"></td>';
+        table += '<td hidden="hidden" id="' + animal._id + '_newLocation' + '"><table>';
+        table += '<tr><td>Location Name: <input name="newLocationName" id="' + animal._id + '_newLocationName"></td></tr>';
+        table += '</table></td></tr>';
         table += '<tr><td>Enclosure:</td><td id="' + animal._id + '_enclosure">' + animal.enclosure.name + '</td>';
-        output += table + '</td></tr></table>';
+        output += table + '</td></tr></table><br>';
     }
     return output + '</table>';
 }
@@ -42,16 +45,6 @@ function formatLocationsAsSelectOptions(locations) {
     return options;
 }
 exports.formatLocationsAsSelectOptions = formatLocationsAsSelectOptions;
-function formatAgeUnitsAsSelectOptions() {
-    let options = '';
-    for (let unit of Object.keys(AgeUnit_1.AgeUnit)) {
-        if (isNaN(Number(unit))) {
-            options += '<option name="' + unit + '">' + unit.toLowerCase() + '</option>';
-        }
-    }
-    return options;
-}
-exports.formatAgeUnitsAsSelectOptions = formatAgeUnitsAsSelectOptions;
 function formatWeightUnitsAsSelectOptions() {
     let options = '';
     for (let unit of Object.keys(WeightUnit_1.WeightUnit)) {

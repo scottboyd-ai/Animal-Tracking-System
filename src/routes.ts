@@ -8,7 +8,6 @@ import * as AnimalService from "./config/Animal/AnimalService";
 import * as EnclosureService from "./config/Enclosure/EnclosureService";
 import * as AnimalLocationService from "./config/AnimalLocation/AnimalLocationService";
 import * as htmlUtil from "./util/htmlUtil";
-import {AgeUnit, getValue as getAgeValue} from "./Enums/AgeUnit";
 import {WeightUnit, getValue as getWeightValue} from "./Enums/WeightUnit";
 
 let Routes = [
@@ -32,10 +31,20 @@ let Routes = [
         }
     },
     {
+        method: 'POST',
+        path: '/animals',
+        handler: async function (request, h) {
+            const data = {
+                name: request.payload.name,
+                species: request.payload.species,
+                sex: request.payload.sex
+            }
+        }
+    },
+    {
         method: 'GET',
         path: '/animals/new',
         handler: async function (request, h) {
-            const ageUnitOptions = htmlUtil.formatAgeUnitsAsSelectOptions();
             const weightUnitOptions = htmlUtil.formatWeightUnitsAsSelectOptions();
             const enclosures = await EnclosureService.getAllEnclosures();
             const enclosureOptions = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
@@ -43,7 +52,6 @@ let Routes = [
             const animalLocationOptions = htmlUtil.formatLocationsAsSelectOptions(locations);
             const sexOptions = htmlUtil.formatSexAsOptions();
             const data = {
-                ageUnitOptions: ageUnitOptions,
                 weightUnitOptions: weightUnitOptions,
                 enclosureOptions: enclosureOptions,
                 animalLocationOptions: animalLocationOptions,
@@ -137,9 +145,32 @@ let Routes = [
     },
     {
         method: 'GET',
+        path: '/selectOptions/{type}',
+        handler: async function (request, h){
+            let options = '';
+            switch (request.params.type){
+                case 'sex':
+                    options = htmlUtil.formatSexAsOptions();
+                    break;
+                case 'location':
+                    const locations = await AnimalLocationService.getAllLocations();
+                    options = htmlUtil.formatLocationsAsSelectOptions(locations);
+                    break;
+                case 'enclosure':
+                    const enclosures = await EnclosureService.getAllEnclosures();
+                    options = htmlUtil.formatEnclosuresAsSelectOptions(enclosures);
+                    break;
+                default:
+                    break;
+            }
+            return options;
+        }
+    },
+    {
+        method: 'GET',
         path: '/images/{path}',
         handler: async function (request, h){
-            return h.file('/public/img/' + request.params.path);
+            return h.file('./src/public/img/' + request.params.path, {confine: false});
         }
     },
     {
