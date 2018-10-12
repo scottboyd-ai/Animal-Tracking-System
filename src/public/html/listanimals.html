@@ -139,8 +139,9 @@
         $('#' + animalId + '_newLocationName').val('');
         $('#' + animalId + '_newLocation').attr('hidden', 'hidden');
         const newLocationButton = $('#' + animalId + '_newLocationButton');
-        newLocationButton.val('New Animal');
+        newLocationButton.val('New Location');
         newLocationButton.attr('onclick', 'newLocation(\'' + animalId + '\')');
+        newLocationButton.attr('hidden', 'hidden');
     }
 </script>
 </html>
